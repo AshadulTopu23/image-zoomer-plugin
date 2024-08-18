@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Image Zoom</title>
+    <style>
+        .zoomable-image-container {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+        }
+
+        .zoomed-image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            display: none;
+        }
+
+        /* .zoomed-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            pointer-events: none;
+            transform-origin: 0 0;
+            transition: transform 0.3s ease;
+        } */
+
+        .zoomable-image-container:hover .zoomed-image-container {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="zoomable-image-container">
+        <img src="product-9.png" alt="Product Image">
+    </div>
+    <div class="zoomable-image-container">
+        <img src="product-10.png" alt="Product Image">
+    </div>
+    <div class="zoomable-image-container">
+        <img src="product-12.png" alt="Product Image">
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get all zoomable image containers
+            const zoomableContainers = document.querySelectorAll('.zoomable-image-container');
+
+            zoomableContainers.forEach(container => {
+                const image = container.querySelector('img');
+                const productImageSrc = image.src; // Use the source of the image inside the container
+
+                // Create zoomed image container dynamically
+                const zoomedImageContainer = document.createElement('div');
+                zoomedImageContainer.classList.add('zoomed-image-container');
+                container.appendChild(zoomedImageContainer);
+
+                // Create zoomed image element
+                const zoomedImage = document.createElement('img');
+                zoomedImage.src = productImageSrc;
+                // zoomedImage.alt = 'Zoomed Product Image';
+                // zoomedImage.classList.add('zoomed-image');
+                zoomedImageContainer.appendChild(zoomedImage);
+
+                let minScale = 2; // Default zoom level
+                let maxScale = 5; // Maximum zoom level
+
+                container.addEventListener('mousemove', (e) => {
+                    const { offsetX, offsetY } = e;
+                    const { width, height } = container.getBoundingClientRect();
+                    const x = (offsetX / width) * 100;
+                    const y = (offsetY / height) * 100;
+
+                    zoomedImage.style.transformOrigin = `${x}% ${y}%`;
+                    zoomedImage.style.transform = `scale(${minScale})`;
+                });
+
+                container.addEventListener('mouseleave', () => {
+                    zoomedImage.style.transformOrigin = 'center center'; // Reset transform origin
+                    zoomedImage.style.transform = `scale(${minScale})`;
+                });
+
+                container.addEventListener('wheel', (e) => {
+                    e.preventDefault(); // Prevent page scrolling
+                    const zoomAmount = 0.1;
+                    if (e.deltaY < 0 && minScale < maxScale) {
+                        // Zoom in
+                        minScale += zoomAmount;
+                    } else {
+                        // Zoom out
+                        minScale = Math.max(2, minScale - zoomAmount); // Ensure minimum scale is 2
+                    }
+                    zoomedImage.style.transform = `scale(${minScale})`;
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

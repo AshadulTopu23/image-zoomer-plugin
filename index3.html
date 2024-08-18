@@ -9,7 +9,15 @@
         .zoomable-image-container {
             position: relative;
             display: inline-block;
+            width: 100%;
             overflow: hidden;
+            /* Add any other styles you want */
+            max-width: 400px;
+        }
+
+        .zoomable-image {
+            width: 100%;
+            height: auto;
         }
 
         .zoomed-image-container {
@@ -23,16 +31,15 @@
             display: none;
         }
 
-        /* .zoomed-image {
+        .zoomed-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: auto;
             pointer-events: none;
-            transform-origin: 0 0;
-            transition: transform 0.3s ease;
-        } */
+        }
+
 
         .zoomable-image-container:hover .zoomed-image-container {
             display: block;
@@ -42,25 +49,19 @@
 
 <body>
     <div class="zoomable-image-container">
-        <img src="product-9.png" alt="Product Image">
+        <img class="zoomable-image" src="product-9.png" alt="Product Image">
     </div>
     <div class="zoomable-image-container">
-        <img src="product-10.png" alt="Product Image">
+        <img class="zoomable-image" src="product-10.png" alt="Product Image">
     </div>
     <div class="zoomable-image-container">
-        <img src="product-12.png" alt="Product Image">
+        <img class="zoomable-image" src="product-12.png" alt="Product Image">
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-
-            // Get all zoomable image containers
-            // const zoomableContainers = document.querySelectorAll('.zoomable-image-container');
-
-
-            let imageZoomer = (zoomableContainers, minScale, maxScale) => {
+            let imageZoomer = (zoomableContainers, minScale = 2, maxScale = 5) => {
                 // selector, minScale, maxScale
-
                 // Loop through each zoomable image container
                 zoomableContainers.forEach(container => {
                     const image = container.querySelector('img');
@@ -74,12 +75,8 @@
                     // Create zoomed image element
                     const zoomedImage = document.createElement('img');
                     zoomedImage.src = productImageSrc;
-                    // zoomedImage.alt = 'Zoomed Product Image';
-                    // zoomedImage.classList.add('zoomed-image');
+                    zoomedImage.classList.add('zoomed-image');
                     zoomedImageContainer.appendChild(zoomedImage);
-
-                    // let minScale = minScale; // Default zoom level
-                    // let maxScale = maxScale; // Maximum zoom level
 
                     container.addEventListener('mousemove', (e) => {
                         const { offsetX, offsetY } = e;
@@ -109,16 +106,10 @@
                         zoomedImage.style.transform = `scale(${minScale})`;
                     });
                 });
-
             }
-
-
-            imageZoomer(document.querySelectorAll('.zoomable-image-container'), 2, 5);
-
-
-
-
-
+            // imageZoomer(document.querySelectorAll('.zoomable-image-container'), 3, 5);
+            const zoomableContainers = document.querySelectorAll('.zoomable-image-container')
+            imageZoomer(zoomableContainers, 2, 5);
         });
 
 
